@@ -1,6 +1,13 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import { Toaster } from "@/components/ui/toaster";
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import React from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <React.Fragment>
+      <Component {...pageProps} />
+      <Toaster />
+    </React.Fragment>
+  );
 }
