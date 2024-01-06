@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Code } from "@/components/ui/code";
 import { FieldError } from "@/components/ui/field-error";
@@ -24,6 +27,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 const BasicFormPage: NextPage = () => {
   const toast = useToast();
+  const [inputType, setInputType] = useState<"password" | "text">("password");
 
   const form = useForm<FormSchema>({
     defaultValues: {
@@ -61,7 +65,7 @@ const BasicFormPage: NextPage = () => {
           <Input
             required
             placeholder="********"
-            type="password"
+            type={inputType === "password" ? "password" : "text"}
             {...form.register("password")}
           />
           <FieldError message={form.formState.errors.password?.message} />
@@ -77,6 +81,14 @@ const BasicFormPage: NextPage = () => {
           <FieldError message={form.formState.errors.email?.message} />
         </Label>
 
+        <Button
+          type="button"
+          onClick={() =>
+            setInputType((type) => (type === "password" ? "text" : "password"))
+          }
+        >
+          Eye
+        </Button>
         <Button disabled={!form.formState.isValid} type="submit">
           Submit
         </Button>
