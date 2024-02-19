@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOffIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Code } from "@/components/ui/code";
 import { FieldError } from "@/components/ui/field-error";
@@ -12,19 +14,8 @@ import { Main } from "@/components/ui/main";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NextPage } from "next";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-const formSchema = z.object({
-  username: z.string().trim().min(3, "Too short").max(20, "Too long"),
-  password: z
-    .string()
-    .min(8, "Too short")
-    .regex(/[0-9]/, "Must contain a number"),
-  email: z.string().email("Invalid email"),
-});
-
-type FormSchema = z.infer<typeof formSchema>;
+import { FormSchema, formSchema } from "@/types/basic-form";
 
 const BasicFormPage: NextPage = () => {
   const toast = useToast();
