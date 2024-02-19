@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+import { Eye, EyeOffIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Code } from "@/components/ui/code";
 import { FieldError } from "@/components/ui/field-error";
@@ -29,7 +30,15 @@ const BasicFormPage: NextPage = () => {
   const toast = useToast();
   const [inputType, setInputType] = useState<"password" | "text">("password");
 
-  const form = useForm<FormSchema>({
+  const handlePasswordType = (e: React.MouseEvent) => {
+    setInputType((prevType) => (prevType === "password" ? "text" : "password"));
+  };
+
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<FormSchema>({
     defaultValues: {
       username: "",
       password: "",
@@ -43,7 +52,7 @@ const BasicFormPage: NextPage = () => {
   return (
     <Main>
       <Form
-        onSubmit={form.handleSubmit((data) => {
+        onSubmit={handleSubmit((data) => {
           toast.toast({
             title: "Success",
             description: <Code object={data} />,
@@ -52,44 +61,42 @@ const BasicFormPage: NextPage = () => {
       >
         <Label>
           Username
-          <Input
-            required
-            placeholder="Username"
-            {...form.register("username")}
-          />
-          <FieldError message={form.formState.errors.username?.message} />
+          <Input required placeholder="Username" {...register("username")} />
+          <FieldError message={errors.username?.message} />
         </Label>
 
-        <Label>
+        <Label className="relative">
           Password
+          {inputType === "password" ? (
+            <Eye
+              onClick={handlePasswordType}
+              className="absolute top-7 right-4 cursor-pointer"
+            />
+          ) : (
+            <EyeOffIcon
+              onClick={handlePasswordType}
+              className="absolute top-7 right-4 cursor-pointer"
+            />
+          )}
           <Input
             required
             placeholder="********"
             type={inputType === "password" ? "password" : "text"}
-            {...form.register("password")}
+            {...register("password")}
           />
-          <FieldError message={form.formState.errors.password?.message} />
+          <FieldError message={errors.password?.message} />
         </Label>
-
         <Label>
           Email
           <Input
             required
             placeholder="example@outlook.com"
-            {...form.register("email")}
+            {...register("email")}
           />
-          <FieldError message={form.formState.errors.email?.message} />
+          <FieldError message={errors.email?.message} />
         </Label>
 
-        <Button
-          type="button"
-          onClick={() =>
-            setInputType((type) => (type === "password" ? "text" : "password"))
-          }
-        >
-          Eye
-        </Button>
-        <Button disabled={!form.formState.isValid} type="submit">
+        <Button disabled={!isValid} type="submit">
           Submit
         </Button>
       </Form>
